@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-public class ProductDtO {
+public class ProductDTO {
     private Long id;
     @NotBlank(message = "product name is required")
     private String name;
@@ -19,7 +19,7 @@ public class ProductDtO {
     private BigDecimal price;
     @PositiveOrZero(message = "quantity can't be negative")
     private Integer quantity;
-    private String image;
+    private String imageUrl;
     private List<CommentDTO> comments;
 
 }
