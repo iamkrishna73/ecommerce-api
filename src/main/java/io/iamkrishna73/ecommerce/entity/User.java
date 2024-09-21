@@ -1,71 +1,71 @@
 package io.iamkrishna73.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Data
+@Setter
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "users")
-public class User implements UserDetails {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
-    @Email
-    private String email;
+    @Size(max = 20)
+    @Column(name = "username")
+    private String username;
+
     @NotBlank
+    @Email
+    @Size(max = 50)
+    @Column(name = "emailAddress")
+    private String email;
+
+    @NotBlank
+    @Size(max = 50)
+    @Column(name = "password")
     private String password;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
+    @JsonBackReference
     @ToString.Exclude
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20, name = "role_name")
     private Role role;
 
     private boolean emailConfirmation;
     private String confirmationCode;
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdDate;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    @UpdateTimestamp
+    private LocalDateTime updatedDate;
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
 
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public User(String username, String email) {
+        this.username = username;
+        this.email = email;
     }
 }

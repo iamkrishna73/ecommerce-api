@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ErrorMessage {
-    INSUFFICIENT_STOCK_EXCEPTION()
-    private final String errorCode;
-    private final String errorMessage;
+  //  INSUFFICIENT_STOCK_EXCEPTION()
+  //  private final String errorCode,
+  // private final String errorMessage;
 }
